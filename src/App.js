@@ -8,6 +8,7 @@ import SignUp from "./Components/SignUp";
 import Profile from "./Components/Profile";
 import Welcome from "./Components/Welcome";
 import { AuthContext } from "./Components/auth-context";
+import Emailverify from "./Components/EmailVerify";
 
 function App() {
   const [profileShow, setProfileShow] = useState(false);
@@ -35,6 +36,7 @@ function App() {
       <Header></Header>
       <SignUp></SignUp>
       {profileShow && <Profile onHide={hideProfileHandler}></Profile>}
+      <Emailverify></Emailverify>
     </React.Fragment>
   );
 }
