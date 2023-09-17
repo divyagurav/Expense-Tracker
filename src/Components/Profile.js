@@ -1,4 +1,4 @@
-import React, { useRef, useContext } from "react";
+import React, { useRef, useContext, useEffect } from "react";
 import { AuthContext } from "./auth-context";
 
 const Profile = (props) => {
@@ -7,6 +7,32 @@ const Profile = (props) => {
   const authCtx = useContext(AuthContext);
 
   const photoUrlInputRef = useRef();
+
+  useEffect(() => {
+    fetch(
+      "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyAbgw2oP9cuP_SsnS1MgpRSyKJiYDXYyS8",
+      {
+        method: "POST",
+        idToken: authCtx.token,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((res) => {
+        console.log(res);
+        console.log(res.data.users[0]);
+
+        const displayName = res.data.users[0].displayName;
+        const photoUrl = res.data.users[0].photoUrl;
+
+        displaynameInputRef.current.value = displayName;
+        photoUrlInputRef.current.value = photoUrl;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
   const updateHandler = (event) => {
     event.preventdefault();
 
@@ -22,6 +48,7 @@ const Profile = (props) => {
           idToken: authCtx.token,
           displayName: enteredDisplayName,
           photoUrl: enteredUrl,
+          deleteAttribute: null,
           returnSecureToken: true,
         }),
         headers: {
