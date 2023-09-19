@@ -1,0 +1,10 @@
+.expenseList {
+  position: absolute;
+  bottom: 20%;
+  left: 460px;
+  padding: 6px;
+  width: 535px;
+  background-color: brown;
+  border-radius: 8px;
+  color: whitesmoke;
+}

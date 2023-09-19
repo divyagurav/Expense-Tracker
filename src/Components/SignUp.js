@@ -48,7 +48,7 @@ function SignUp() {
         if (res.ok) {
           const response = res.json();
           authCtx.login(response.idToken);
-          navigate("/welcome");
+          navigate("/expense");
           console.log(response.idToken);
           alert("successfully logged");
         } else {
