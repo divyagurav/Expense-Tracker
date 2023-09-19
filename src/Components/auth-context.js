@@ -14,10 +14,12 @@ const AuthContextProvider = (props) => {
 
   const loginHandler = () => {
     setToken(token);
+    localStorage.setItem("token", token);
   };
 
   const logoutHandler = () => {
     setToken(null);
+    localStorage.removeItem("token");
   };
 
   const contextValue = {

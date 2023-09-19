@@ -1,16 +1,17 @@
-import React, { useState, useRef, useContext } from "react";
+import { useRef, useState, useContext } from "react";
 import { AuthContext } from "./auth-context";
-
 import { useNavigate } from "react-router-dom";
 
-const SignUp = () => {
-  const emailInput = useRef();
-  const passwordInputRef = useRef();
-  const confirmPasswordRef = useRef();
-  const authCtx = useContext(AuthContext);
+import classes from "./SignUp.module.css";
+
+function SignUp() {
+  const navigate = useNavigate();
+  const emailInputRef = useRef("");
+  const passwordInputRef = useRef("");
+  const confirmPasswordInputRef = useRef("");
   const [isLogin, setIsLogin] = useState(true);
 
-  const navigate = useNavigate();
+  const authCtx = useContext(AuthContext);
 
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
@@ -19,168 +20,111 @@ const SignUp = () => {
   const submitHandler = (event) => {
     event.preventDefault();
 
-    const enteredEmail = emailInput.current.value;
+    const enteredEmail = emailInputRef.current.value;
     const enteredPassword = passwordInputRef.current.value;
+    const enteredConfirmPassword = confirmPasswordInputRef.current.value;
 
-    let url;
     if (isLogin) {
-      url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAbgw2oP9cuP_SsnS1MgpRSyKJiYDXYyS8";
-    } else {
-      url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAbgw2oP9cuP_SsnS1MgpRSyKJiYDXYyS8";
-    }
-    fetch(url, {
-      method: "POST",
-      body: JSON.stringify({
-        email: enteredEmail,
-        password: enteredPassword,
-        returnSecureToken: true,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
+      fetch(
+        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCODwcyHk2Zov8fcLhSOjRQLG-3O357vS0",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            email: enteredEmail,
+            password: enteredPassword,
+            returnSecureToken: true,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      ).then((res) => {
         if (res.ok) {
-          alert("signup success");
-          return res.json();
+          const response = res.json();
+          authCtx.login(response.idToken);
+          navigate("/welcome");
+          console.log(response.idToken);
+          alert("successfully logged");
         } else {
           return res.json().then((data) => {
-            let errorMessage = "Authentication failed!";
-            // if (data && data.error && data.error.message) {
-            //   errorMessage = data.error.message;
-            // }
-
-            throw new Error(errorMessage);
+            let errormess = data.error.message;
+            alert(errormess);
           });
         }
-      })
-      .then((data) => {
-        authCtx.login(data.idToken);
-        console.log(data);
-        navigate("/welcome");
-      })
-      .catch((err) => {
-        alert(err.message);
       });
+    } else {
+      if (enteredPassword !== enteredConfirmPassword) {
+        alert("InCorrect Password");
+      } else {
+        fetch(
+          "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCODwcyHk2Zov8fcLhSOjRQLG-3O357vS0",
+          {
+            method: "POST",
+            body: JSON.stringify({
+              email: enteredEmail,
+              password: enteredConfirmPassword,
+              returnSecureToken: true,
+            }),
+            header: {
+              "Content-Type": "application/json",
+            },
+          }
+        ).then((res) => {
+          if (res.ok) {
+            alert("successfully created account");
+          } else {
+            return res.json().then((data) => {
+              let errormessage = data.error.message;
+              alert(errormessage);
+            });
+          }
+        });
+      }
+    }
   };
 
   return (
-    <div>
-      <form
-        onSubmit={submitHandler}
-        style={{
-          width: "300px",
-          margin: "auto",
-          borderStyle: "outset",
-          height: "300px",
-          marginTop: "100px",
-          marginRight: "30%",
-        }}
-      >
-        <div>
-          <header>
-            <h1 style={{ textAlign: "center" }}>
-              {isLogin ? "Login" : "Sign Up"}
-            </h1>
-          </header>
-          <div>
-            <label></label>
-            <input
-              type="email"
-              ref={emailInput}
-              placeholder="Email"
-              style={{
-                width: "80%",
-                marginBottom: "10px",
-                padding: "10px",
-                borderColor: "lightgray",
-                borderStyle: "ridge",
-                marginLeft: "10px",
-              }}
-            ></input>
-          </div>
-          <div>
-            <label></label>
-            <input
-              type="password"
-              ref={passwordInputRef}
-              placeholder="Password"
-              style={{
-                width: "80%",
-                marginBottom: "10px",
-                padding: "10px",
-                borderColor: "lightgray",
-                borderStyle: "ridge",
-                marginLeft: "10px",
-              }}
-            ></input>
-          </div>
+    <section>
+      <div className={classes.signUp}>
+        <h1>{isLogin ? "Login" : "SignUp"}</h1>
+        <form onSubmit={submitHandler}>
+          <input
+            name="email"
+            type="email"
+            placeholder="Email"
+            required
+            ref={emailInputRef}
+          />
+          <input
+            name="password"
+            type="password"
+            placeholder="Password"
+            required
+            ref={passwordInputRef}
+          />
           {!isLogin ? (
-            <div>
-              <label></label>
-              <input
-                type="password"
-                ref={confirmPasswordRef}
-                placeholder="Confirm Password"
-                style={{
-                  width: "80%",
-                  marginBottom: "20px",
-                  padding: "10px",
-                  borderColor: "lightgray",
-                  borderStyle: "ridge",
-                  marginLeft: "10px",
-                }}
-              ></input>
-            </div>
+            <input
+              name="password"
+              type="password"
+              placeholder="Confirm Password"
+              required
+              ref={confirmPasswordInputRef}
+            />
           ) : (
             ""
           )}
-          <div>
-            <button
-              style={{
-                width: "90%",
-                marginBottom: "10px",
-                borderRadius: "30px",
-                height: "30px",
-                borderStyle: "none",
-                backgroundColor: "#5e90ed",
-                marginLeft: "10px",
-              }}
-            >
-              {isLogin ? "Login" : "Sign up"}
-            </button>
-          </div>
-          <div style={{ textAlign: "center" }}>
-            {isLogin ? <a href="#">Forgot Password</a> : ""}
-          </div>
-        </div>
-      </form>
-      <button
-        onClick={switchAuthModeHandler}
-        style={{
-          width: "310px",
-          marginTop: "10px",
-          height: "50px",
-          backgroundColor: "#bdf5bd",
-          borderStyle: "hidden",
-          marginLeft: "50%",
-          borderRadius: "6px",
-        }}
-      >
-        {isLogin ? "Don't have an account? Sign up" : "Have an account? Login"}
-      </button>
-    </div>
+          <button>{isLogin ? "Login" : "Sign Up"}</button>
+        </form>
+      </div>
+      <div className={classes.account}>
+        <button onClick={switchAuthModeHandler}>
+          {isLogin
+            ? "Don't have an account? Sign up"
+            : "Have an account? Login"}
+        </button>
+      </div>
+    </section>
   );
-};
+}
 
 export default SignUp;
-
-// if (isLogin) {
-//   url =
-//     "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBnYM8b_BjsCXLDfxXLw6RU-i_f0pcRn7M";
-// } else {
-//   url =
-//     "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBnYM8b_BjsCXLDfxXLw6RU-i_f0pcRn7M";
-// }

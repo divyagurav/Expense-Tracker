@@ -1,43 +1,16 @@
 import "./App.css";
-import React, { useState, useContext } from "react";
-
+import SignUpPage from "./Components/Pages/SignUpPage";
 import { Route, Routes } from "react-router-dom";
-
-import Header from "./Components/Header";
-import SignUp from "./Components/SignUp";
-import Profile from "./Components/Profile";
-import Welcome from "./Components/Welcome";
-import { AuthContext } from "./Components/auth-context";
-import Emailverify from "./Components/EmailVerify";
+import WelcomePage from "./Components/Pages/WelcomePage";
 
 function App() {
-  const [profileShow, setProfileShow] = useState(false);
-  const authCtx = useContext(AuthContext);
-
-  const showProfileHandler = () => {
-    setProfileShow(true);
-  };
-
-  const hideProfileHandler = () => {
-    setProfileShow(false);
-  };
-
   return (
-    <React.Fragment>
+    <div className="App">
       <Routes>
-        <Route>
-          <Route
-            path="/welcome"
-            element={<Welcome onShow={showProfileHandler} />}
-          ></Route>
-        </Route>
+        <Route path="/" element={<SignUpPage />}></Route>
+        <Route path="/welcome" element={<WelcomePage />}></Route>
       </Routes>
-
-      <Header></Header>
-      <SignUp></SignUp>
-      {profileShow && <Profile onHide={hideProfileHandler}></Profile>}
-      <Emailverify></Emailverify>
-    </React.Fragment>
+    </div>
   );
 }
 

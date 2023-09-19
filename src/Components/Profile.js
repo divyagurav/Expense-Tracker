@@ -1,53 +1,49 @@
-import React, { useRef, useContext, useEffect } from "react";
+import { BsGithub, BsGlobe } from "react-icons/bs";
+import classes from "./Profile.module.css";
+import { useContext, useRef, useEffect } from "react";
 import { AuthContext } from "./auth-context";
 
 const Profile = (props) => {
-  const displaynameInputRef = useRef();
-
+  const displayNameInputRef = useRef("");
+  const photoUrlInputRef = useRef("");
   const authCtx = useContext(AuthContext);
 
-  const photoUrlInputRef = useRef();
+  // const profileData = {
+  //   name: enteredDisplayName,
+  //   url: enteredPhotoUrl,
 
-  useEffect(() => {
-    fetch(
-      "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyAbgw2oP9cuP_SsnS1MgpRSyKJiYDXYyS8",
-      {
-        method: "POST",
-        idToken: authCtx.token,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then((res) => {
-        console.log(res);
-        console.log(res.data.users[0]);
+  // };
 
-        const displayName = res.data.users[0].displayName;
-        const photoUrl = res.data.users[0].photoUrl;
+  function storeData() {
+    fetch("https://profile-8d013-default-rtdb.firebaseio.com//profile.json", {
+      method: "POST",
+      body: JSON.stringify({
+        name: displayNameInputRef.current.value,
+        url: photoUrlInputRef.current.value,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => {
+      const values = res.json();
+      console.log(values);
+    });
+  }
 
-        displaynameInputRef.current.value = displayName;
-        photoUrlInputRef.current.value = photoUrl;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  });
-  const updateHandler = (event) => {
-    event.preventdefault();
+  const updatehandler = (event) => {
+    event.preventDefault();
 
-    const enteredDisplayName = displaynameInputRef.current.value;
-
-    const enteredUrl = photoUrlInputRef.current.value;
+    const enteredDisplayName = displayNameInputRef.current.value;
+    const enteredPhotoUrl = photoUrlInputRef.current.value;
 
     fetch(
-      "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyAbgw2oP9cuP_SsnS1MgpRSyKJiYDXYyS8",
+      "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyCODwcyHk2Zov8fcLhSOjRQLG-3O357vS0",
       {
         method: "POST",
         body: JSON.stringify({
           idToken: authCtx.token,
           displayName: enteredDisplayName,
-          photoUrl: enteredUrl,
+          photoUrl: enteredPhotoUrl,
           deleteAttribute: null,
           returnSecureToken: true,
         }),
@@ -57,79 +53,95 @@ const Profile = (props) => {
       }
     ).then((res) => {
       if (res.ok) {
-        alert("profilephoto update success");
-        console.log(res.json());
+        alert("successfully update profile");
+        console.log("successfully update profile");
+        // const data = res.json();
+        // storeData(data.displayName, data.photoUrl);
       } else {
-        res.json().then((data) => {
-          let errorMessage = "profile photo update Failed";
-          console.log(data);
-          alert(errorMessage);
-        });
+        alert("phofile update failed");
       }
     });
+    storeData();
   };
+
+  // useEffect(() => {
+
+  //     .then((res) => {
+  //       console.log(res);
+  //       console.log(res.Data.users[0]);
+
+  //       const displayName = res.Data.users[0].displayName;
+  //       const photoUrl = res.data.users[0].photoUrl;
+
+  //       displayNameInputRef.current.value = displayName;
+  //       photoUrlInputRef.current.value = photoUrl;
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //       alert("Error in get data");
+  //     });
+  // });
+
+  function fetchData() {
+    fetch(
+      "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyCODwcyHk2Zov8fcLhSOjRQLG-3O357vS0",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          idToken: authCtx.token,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    ).then((res) => {
+      if (res.ok) {
+        const values = res.json();
+        console.log(values);
+        alert("successfully get data");
+      } else {
+        alert("failed to get data");
+      }
+    });
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
   return (
-    <div>
-      <form
-        style={{
-          borderStyle: "outset",
-          width: "50%",
-          margin: "auto",
-          position: "absolute",
-          top: "10%",
-          right: "2%",
-          height: "22%",
-        }}
-        onSubmit={updateHandler}
-      >
-        <header>
-          <h5>Contact Details</h5>
+    <div className={classes.profile}>
+      <section>
+        <h3>Contact Details</h3>
+        <div className={classes.cancel}>
           <button
-            onClick={props.onHide}
             style={{
-              position: "absolute",
-              margin: "10px",
-              top: "0",
-              right: "0",
+              backgroundColor: "whitesmoke",
+              padding: "10px",
+              color: "red",
+              borderColor: "red",
+              borderRadius: "4px",
+              fontWeight: "bolder",
+              fontSize: "15px",
             }}
+            onClick={props.onHide}
           >
             Cancel
           </button>
-        </header>
-        <label
-          style={{ padding: "1%", marginBottom: "50%", paddingLeft: "3%" }}
-        >
-          Full Name:
-        </label>
-        <input
-          type="text"
-          ref={displaynameInputRef}
-          style={{ height: "15cd%" }}
-        ></input>
-        <i class="fas fa-globe" style={{ fontSize: "24px" }}></i>
-        <label style={{ padding: "1%", paddingLeft: "3%", height: "20%" }}>
-          Profile Photo URL:
-        </label>
-        <input
-          ref={photoUrlInputRef}
-          style={{ height: "15%", margin: "2%" }}
-          type="url"
-        ></input>
-        <button
-          style={{
-            position: "absolute",
-            bottom: "5%",
-            left: "2%",
-            borderRadius: "4px",
-            height: "30px",
-            backgroundColor: "#d57676",
-            color: "white",
-            border: "none",
-          }}
-        >
-          Update
-        </button>
-      </form>
+        </div>
+
+        <form onSubmit={updatehandler}>
+          <BsGithub size={18}></BsGithub>
+          <label htmlFor="name">Full Name:</label>
+          <input type="text" ref={displayNameInputRef}></input>
+          <BsGlobe size={18} />
+          <label htmlFor="profile">Profile Photo Url:</label>
+          <input type="url" ref={photoUrlInputRef}></input>
+          <div className={classes.update}>
+            <button>Update</button>
+          </div>
+        </form>
+      </section>
     </div>
   );
 };
