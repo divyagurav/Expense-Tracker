@@ -14,6 +14,7 @@ h1 {
   box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 8px;
+  margin-bottom: 10px;
 }
 
 .signUp input {
@@ -37,6 +38,7 @@ h1 {
   color: white;
   font-size: 18px;
   font-weight: bolder;
+  padding-bottom: 10%;
 }
 
 .account button {
@@ -52,6 +54,8 @@ h1 {
   background-color: #c6ecd7;
   font-size: 15px;
   border-radius: 5px;
+
+  padding-bottom: 2%;
 }
 
 .account button:hover {
@@ -61,4 +65,5 @@ h1 {
 
 .forgot button {
   background-color: darkslategray;
+  padding-bottom: 10%;
 }

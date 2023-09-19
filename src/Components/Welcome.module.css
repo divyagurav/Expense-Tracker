@@ -13,30 +13,16 @@ p {
   border-bottom: 1px solid gray;
 }
 
-.header button {
-  position: absolute;
-  top: 0%;
-  right: 3%;
-  padding: 12px;
-  border-color: lightpink;
-  border-radius: 20px;
-  margin-top: 1%;
-  background-color: #b62f2f;
-  width: 25%;
-  color: whitesmoke;
-  border: 0px;
-  margin-top: 25px;
-}
-
 .verify button {
   position: absolute;
   top: 4%;
-  left: 30%;
+  left: 35%;
   padding: 9px;
   border: none;
   background-color: black;
   color: whitesmoke;
   border-radius: 6px;
+  width: 6%;
 }
 
 .logout button {
@@ -48,4 +34,21 @@ p {
   background-color: black;
   color: whitesmoke;
   border-radius: 6px;
+  width: 6%;
+}
+
+.complete button {
+  position: absolute;
+  top: 0%;
+  right: 3%;
+  padding: 8px;
+  border-color: lightpink;
+  border-radius: 20px;
+  margin-top: 1%;
+  background-color: #b62f2f;
+  width: 23%;
+  color: whitesmoke;
+  border: 0px;
+  margin-top: 25px;
+  height: 7%;
 }

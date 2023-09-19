@@ -59,15 +59,17 @@ const Welcome = () => {
             : "welcome to expense Tracker"}
         </p>
 
-        <button onClick={showHandler}>
-          {show
-            ? "Your Profile is 64% completed. A complete Profile has higher chances of landing job."
-            : " Your Profile is Incomplete."}{" "}
-          <i>Complete Now</i>
-        </button>
+        <div className={classes.complete}>
+          <button onClick={showHandler}>
+            {show
+              ? "Your Profile is 64% completed. A complete Profile has higher chances of landing job."
+              : " Your Profile is Incomplete."}{" "}
+            <i>Complete Now</i>
+          </button>
+        </div>
       </div>
       <div className={classes.verify}>
-        <button onClick={verifyHandler}>Vefify Email</button>
+        <button onClick={verifyHandler}>Vefiry Email</button>
       </div>
       <div className={classes.logout}>
         <button onClick={logoutHandler}>Logout</button>
