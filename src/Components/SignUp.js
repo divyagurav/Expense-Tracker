@@ -17,6 +17,12 @@ function SignUp() {
     setIsLogin((prevState) => !prevState);
   };
 
+  const forgotHandler = (event) => {
+    event.preventDefault();
+
+    navigate("/forgotPage");
+  };
+
   const submitHandler = (event) => {
     event.preventDefault();
 
@@ -84,46 +90,53 @@ function SignUp() {
   };
 
   return (
-    <section>
-      <div className={classes.signUp}>
-        <h1>{isLogin ? "Login" : "SignUp"}</h1>
-        <form onSubmit={submitHandler}>
-          <input
-            name="email"
-            type="email"
-            placeholder="Email"
-            required
-            ref={emailInputRef}
-          />
-          <input
-            name="password"
-            type="password"
-            placeholder="Password"
-            required
-            ref={passwordInputRef}
-          />
-          {!isLogin ? (
+    <div>
+      <section>
+        <div className={classes.signUp}>
+          <h1>{isLogin ? "Login" : "SignUp"}</h1>
+          <form onSubmit={submitHandler}>
+            <input
+              name="email"
+              type="email"
+              placeholder="Email"
+              required
+              ref={emailInputRef}
+            />
             <input
               name="password"
               type="password"
-              placeholder="Confirm Password"
+              placeholder="Password"
               required
-              ref={confirmPasswordInputRef}
+              ref={passwordInputRef}
             />
-          ) : (
-            ""
-          )}
-          <button>{isLogin ? "Login" : "Sign Up"}</button>
-        </form>
-      </div>
-      <div className={classes.account}>
-        <button onClick={switchAuthModeHandler}>
-          {isLogin
-            ? "Don't have an account? Sign up"
-            : "Have an account? Login"}
-        </button>
-      </div>
-    </section>
+            {!isLogin ? (
+              <input
+                name="password"
+                type="password"
+                placeholder="Confirm Password"
+                required
+                ref={confirmPasswordInputRef}
+              />
+            ) : (
+              ""
+            )}
+            <button>{isLogin ? "Login" : "Sign Up"}</button>
+            <div className={classes.forgot}>
+              {isLogin && (
+                <button onClick={forgotHandler}>Forgot Password</button>
+              )}
+            </div>
+          </form>
+        </div>
+        <div className={classes.account}>
+          <button onClick={switchAuthModeHandler}>
+            {isLogin
+              ? "Don't have an account? Sign up"
+              : "Have an account? Login"}
+          </button>
+        </div>
+      </section>
+    </div>
   );
 }
 

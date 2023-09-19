@@ -58,3 +58,7 @@ h1 {
   background-color: #686666;
   color: whitesmoke;
 }
+
+.forgot button {
+  background-color: darkslategray;
+}
