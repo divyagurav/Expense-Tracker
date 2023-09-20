@@ -68,6 +68,34 @@ const Expenses = () => {
   useEffect(() => {
     getData();
   });
+
+  const deleteExpensehandler = (expenseId) => {
+    fetch(
+      `https://profile-8d013-default-rtdb.firebaseio.com/expenses/${expenseId}.json`,
+      {
+        method: "DELETE",
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    ).then((res) => {
+      if (res.ok) {
+        console.log(res.json());
+      } else {
+        alert("delete expenses failed");
+      }
+    });
+  };
+
+  const edithandler = (expenseId, expenses) => {
+    moneyInputRef.current.value = expenses.money;
+    descriptionInputRef.current.value = expenses.description;
+    categoryInputRef.current.value = expenses.category;
+
+    deleteExpensehandler(expenseId);
+  };
+
   return (
     <div>
       <div className={classes.header}>
@@ -98,7 +126,11 @@ const Expenses = () => {
         </section>
       </div>
 
-      <ExpenseList items={expenses}></ExpenseList>
+      <ExpenseList
+        items={expenses}
+        onDelete={deleteExpensehandler}
+        onEdit={edithandler}
+      ></ExpenseList>
     </div>
   );
 };

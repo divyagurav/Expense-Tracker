@@ -10,9 +10,16 @@
 
 li {
   background-color: brown;
-  padding: 7px;
+  padding-top: 10px;
+  padding: 10px;
+  height: 40px;
   color: whitesmoke;
-  border-radius: 4px;
+  border-radius: 8px;
   width: 440px;
   margin-left: 0px;
+}
+
+.expenseList button {
+  width: 15%;
+  margin-left: 8px;
 }
