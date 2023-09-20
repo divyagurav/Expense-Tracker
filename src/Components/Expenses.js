@@ -1,6 +1,6 @@
 import ExpenseList from "./ExpenseList";
 import classes from "./Expenses.module.css";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 const Expenses = () => {
   const moneyInputRef = useRef("");
   const descriptionInputRef = useRef("");
@@ -10,23 +10,64 @@ const Expenses = () => {
   const submithandler = (event) => {
     event.preventDefault();
 
-    // const formData = {
-    //   money: moneyInputRef.current.value,
-    //   description: descriptionInputRef.current.value,
-    //   category: categoryInputRef.current.value,
-    // };
-    setExpenses((prevState) => {
-      return [
-        ...prevState,
-        {
-          id: Math.random().toString(),
-          money: moneyInputRef.current.value,
-          description: descriptionInputRef.current.value,
-          category: categoryInputRef.current.value,
-        },
-      ];
+    const money = moneyInputRef.current.value;
+    const description = descriptionInputRef.current.value;
+    const category = categoryInputRef.current.value;
+    fetch("https://profile-8d013-default-rtdb.firebaseio.com/expenses.json", {
+      method: "POST",
+      body: JSON.stringify({
+        money: money,
+        description: description,
+        category: category,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((response) => {
+      if (response.ok) {
+        const data = response.json();
+        console.log(data);
+
+        const loadedExpenses = [];
+        for (const key in data) {
+          loadedExpenses.push({
+            id: key,
+            money: data[key].money,
+            description: data[key].description,
+            category: data[key].category,
+          });
+        }
+        setExpenses(loadedExpenses);
+      }
     });
   };
+
+  async function getData() {
+    const response = await fetch(
+      "https://profile-8d013-default-rtdb.firebaseio.com/expenses.json"
+    );
+    if (response.ok) {
+      const data = await response.json();
+
+      const loadedExpenses = [];
+      for (const key in data) {
+        loadedExpenses.push({
+          id: key,
+          money: data[key].money,
+          description: data[key].description,
+          category: data[key].category,
+        });
+      }
+      setExpenses(loadedExpenses);
+    } else {
+      alert("failed to fetch data");
+    }
+  }
+  getData();
+
+  useEffect(() => {
+    getData();
+  });
   return (
     <div>
       <div className={classes.header}>

@@ -1,10 +1,18 @@
 .expenseList {
   position: absolute;
-  bottom: 20%;
-  left: 460px;
-  padding: 6px;
-  width: 535px;
-  background-color: brown;
+  top: 500px;
+  left: 500px;
+  padding: 3px;
+  width: 458px;
+  background-color: transparent;
   border-radius: 8px;
+}
+
+li {
+  background-color: brown;
+  padding: 7px;
   color: whitesmoke;
+  border-radius: 4px;
+  width: 440px;
+  margin-left: 0px;
 }
