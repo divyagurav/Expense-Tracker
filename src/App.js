@@ -1,21 +1,42 @@
-import "./App.css";
-import SignUpPage from "./Components/Pages/SignUpPage";
-import { Route, Routes } from "react-router-dom";
-import WelcomePage from "./Components/Pages/WelcomePage";
-import ForgotPage from "./Components/ForgotPage";
-import Expensepage from "./Components/Pages/ExpensePage";
+import './App.css';
+import { Fragment } from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
+import Header from "./Components/Layout/Header";
+import { useSelector } from 'react-redux';
+import Home from "./Components/Pages/Home";
+import ProfilePage from "./Components/Pages/Profile";
+import ExpensePage from './Components/Pages/ExpensePage';
+import Authentication from './Components/Authentication/Authentication';
 
 function App() {
+  const isLogin = useSelector(state => state.authentication.isLogin);
   return (
-    <div className="App">
-      <Routes>
-        <Route path="/" element={<SignUpPage />}></Route>
-        <Route path="/welcome" element={<WelcomePage />}></Route>
-        <Route path="/forgotPage" element={<ForgotPage></ForgotPage>}></Route>
-        <Route path="/expense" element={<Expensepage></Expensepage>}></Route>
-      </Routes>
-    </div>
+    <Fragment>
+      <Header />
+      <main>
+     <Switch>
+          {!isLogin &&
+          <Route path='/' exact>
+              <Home />
+            </Route>}
+          <Route path='/' exact>
+            {isLogin && <Home />}
+            {!isLogin && <Redirect to='/auth' />}
+            </Route>
+            <Route path='/auth'>
+              {!isLogin && <Authentication />}
+            </Route>
+            <Route path='/profile'>
+              {isLogin && <ProfilePage />}
+              {!isLogin && <Redirect to='/auth' />}
+            </Route>
+            <Route path='/expense'>
+              {isLogin && <ExpensePage />}
+              {!isLogin && <Redirect to='/auth' />}
+            </Route>
+      </Switch>
+      </main>
+    </Fragment>
   );
 }
-
 export default App;
